@@ -29,7 +29,6 @@ const onSubmit = async () => {
     form.loading = false;
   } catch ($e) {
     form.loading = false;
-    ElMessage.error($e as string);
   }
 }
 </script>
@@ -59,7 +58,6 @@ const onSubmit = async () => {
   --gradient-start: #5583EE;
   --gradient-end: #41D8DD;
   background: linear-gradient(33deg, var(--gradient-start), var(--gradient-end));
-
   .login-layout {
     width: 300px;
     position: absolute;

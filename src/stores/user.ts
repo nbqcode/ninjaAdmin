@@ -1,7 +1,8 @@
 import {defineStore} from 'pinia'
 import request from '@/plugins/request'
-import {asyncRouter} from '@/hook/helper';
 import type {RouteLocation} from  "vue-router"
+import XEUtils from "xe-utils";
+import router from "@/router";
 interface User {
     token: string,
 }
@@ -10,7 +11,35 @@ interface UserStore{
     active:string,
     collapse:boolean,
     tabs:RouteLocation[]
-    menu:any[]
+    menu:any[],
+    user:object
+}
+
+export  const  asyncView =  ()=>{
+    const page =   import.meta.glob('@/views/**/*.vue');
+    const module: any = {};
+    for (let [keys, value] of Object.entries(page)) {
+        keys = keys.replace(/\/src\/views|\.vue/ig, '').replace('\/src\/views', '')
+        module[keys] = value;
+    }
+    return module;
+}
+const asyncRouter =  () => {
+    const userStore = useUserStore();
+    const auth = XEUtils.toTreeArray(userStore.menu);
+    const module = asyncView();
+    for (let {route_path, meta} of auth) {
+        if (module[route_path]) {
+            const routerItem = {
+                name: XEUtils.camelCase((route_path as string).replace(/\//g, '-')),
+                path: route_path,
+                meta: meta ?? [],
+                component: module[route_path]
+            };
+            router.addRoute('home', routerItem)
+        }
+    }
+
 }
 export const useUserStore = defineStore('User', {
     state: ():UserStore => {
@@ -19,9 +48,14 @@ export const useUserStore = defineStore('User', {
             active: '/dashboard/index',
             collapse:false,
             tabs: [],
+            user: {},
             menu: []
         }
     },
+
+
+
+    
     actions: {
         /**
          * 密码登录
@@ -43,19 +77,20 @@ export const useUserStore = defineStore('User', {
          * 获取用户信息
          */
         async getUserInfo() {
-            try {
-                const data: any = await request.get('/login/userinfo');
-                this.menu = data.auth;
-                this.token = data.token;
-                await asyncRouter();
-            } catch ($e) {
-                return Promise.reject($e);
-            }
-
+            const data: any = await request.get('/login/userinfo');
+            this.menu = data.auth;
+            this.token = data.token;
+            this.user = data;
+            asyncRouter()
+        },
+        async Logout(){
+            await request.post('/login/logout')
+            localStorage.clear();
+            await router.replace('/login');
         }
     },
     persist: {
-        paths: ['token']
+        paths: ['token','menu','user']
     }
 })
 

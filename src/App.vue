@@ -2,6 +2,11 @@
   <router-view/>
 </template>
 <style lang="scss">
+@import "//at.alicdn.com/t/c/font_3983075_kcv1ny4m1y.css";
+[class*='lg-']{
+  font-family: "iconfont";
+  font-style: normal;
+}
 :root {
   --vxe-border-radius: 0 !important;
 }
@@ -10,9 +15,8 @@ body {
   padding: 0;
   margin: 0;
 }
-
-.vxe-buttons--wrapper {
-  padding: 0 1em;
+.vxe-buttons--wrapper{
+  padding-left: 1em;
 }
 
 .vxe-tools--operate {
@@ -20,29 +24,27 @@ body {
 }
 
 * ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
   height: 10px;
 }
 
 /*滚动条的轨道*/
 * ::-webkit-scrollbar-track {
-  background-color: #FFFFFF;
+  background-color: initial;
 }
 
 /*滚动条里面的小方块，能向上向下移动*/
 * ::-webkit-scrollbar-thumb {
-  background-color: #bfbfbf;
-  border-radius: 5px;
-  border: 1px solid #F1F1F1;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #d7d4d4;
+  border-radius: 2px;
 }
 
 * ::-webkit-scrollbar-thumb:hover {
-  background-color: #A8A8A8;
+  background-color: initial;
 }
 
 * ::-webkit-scrollbar-thumb:active {
-  background-color: #787878;
+  background-color: initial;
 }
 
 /*边角，即两个滚动条的交汇处*/

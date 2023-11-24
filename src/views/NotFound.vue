@@ -1,8 +1,8 @@
 <script lang="ts" setup>
   import {useRouter} from "vue-router";
+  import {URLDirname} from "@/hook/helper"
+  const  dirname = URLDirname(location.pathname);
   const router = useRouter();
-
-
 </script>
 <template>
   <div style="position: relative;height: 100%">
@@ -25,5 +25,3 @@
     transform: translate(-50%,-50%);
   }
 </style>
-<script setup lang="ts">
-</script>

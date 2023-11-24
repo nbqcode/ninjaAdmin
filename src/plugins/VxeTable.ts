@@ -1,10 +1,9 @@
 import VXETable from "vxe-table";
-import type {VXETableConfigOptions} from "vxe-table"
-import {h} from "vue"
 import 'vxe-table/lib/style.css'
 import VXETablePluginElement from 'vxe-table-plugin-element'
 import 'vxe-table-plugin-element/dist/style.css'
 import VXETablePluginMenus from 'vxe-table-plugin-menus'
+import request from "@/plugins/request";
 
 VXETable.use(VXETablePluginElement)
 VXETable.use(VXETablePluginMenus)
@@ -68,9 +67,18 @@ VXETable.setup({
         resizable: true,
         columnConfig: {isCurrent: true, isHover: true},
         menuConfig: menuConfig,
+        treeConfig:{
+            lazy: true,
+            transform: true,
+            parentField: 'parent_id',
+            hasChildField: 'has_children',
+            childrenField: 'children',
+            accordion: true
+        },
         rowConfig: {
             isCurrent: true, isHover: true
         },
+
 
     }
 })

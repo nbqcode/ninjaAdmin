@@ -3,6 +3,7 @@ import type { AxiosResponse, InternalAxiosRequestConfig, AxiosInstance } from "a
 import { ElMessage } from "element-plus";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import {HandlerMessage} from "@/hook/helper";
 
 // 创建一个自定义的Axios对象
 const request: AxiosInstance = axios.create({
@@ -32,57 +33,18 @@ request.interceptors.response.use((res: AxiosResponse) => {
         }
     }
     if(code!==200){
+        throw  new HandlerMessage(data);
         return Promise.reject(data)
     }
     return data;
 }, (error: AxiosError) => {
     //按照实际的响应包进行解析，通过关键字匹配的方式
-    return Promise.reject(error.message);
+     ElMessage.error(error.message);
+    router.replace({ path: '/login' })
+     Promise.reject(error.message);
 })
-export const  restFile = (api:string,data:any)=>{
-     const formData = new FormData()
-    for (const dataKey in data) {
-        formData.append(dataKey,data[dataKey])
-    }
-    return request(api ,{
-        method:'post',
-        headers: {
-            'Content-Type':'application/multipart/form-data'
-        },
-        data:formData
-    });
-}
-export  const restFull= (api:string,type:string,data:any)=>{
 
-    if (type == 'post') {
-        return request.post(api, data)
-    }
-
-    if (type == 'get') {
-        const url = data.hasOwnProperty('id') ? `/${api}/${data.id}` : `/${api}`;
-        return request.get(url, {
-            params: data
-        })
-    }
-
-    if (type == 'delete') {
-        return request.delete(`/${api}/${data.id}`, {
-            params: data
-        })
-    }
-    if (type == 'put') {
-        return request.put(`/${api}/${data.id}`, data)
-    }
-}
-//暴露Axios实例化对象，允许所有文件调用Axios
 export default request;
 
-export const get = request.get;
-
-export const post = request.post;
-
-export const put = request.put;
-
-export const drop = request.delete
 
 
